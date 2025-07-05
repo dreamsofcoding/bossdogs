@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/splash_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="color/white">
+
+        <LinearLayout
+            android:id="@+id/splash_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:alpha="0">
+
+            <TextView
+                android:id="@+id/splash_title"
+                style="@style/TextAppearance.Material3.DisplayMedium"
+                android:text="@string/app_name"
+                android:textColor="?attr/colorOnBackground"
+                android:gravity="center"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/splash_animation"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:lottie_rawRes="@raw/splash"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="48dp" />
+
+            <TextView
+                android:id="@+id/splash_loading_text"
+                style="@style/TextAppearance.Material3.BodyMedium"
+                android:text="@string/loading_splash_screen_text"
+                android:textColor="?attr/colorOnBackground"
+                android:alpha="0.6"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </FrameLayout>
+</layout>
