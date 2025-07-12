@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentBreedsBinding
+import io.bossdogs.model.DogBreed
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BreedsFragment : Fragment() {
@@ -18,9 +24,13 @@ class BreedsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: BreedsViewModel by viewModels()
-    private val adapter = DogBreedAdapter(
-        onClick = { breed -> viewModel.onBreedClick(breed) },
-        onImageRequest = viewModel::loadBreedImage
+    private val adapter = DogBreedsAdapter(
+        onClick = { breed ->
+//            viewModel.onBreedClick(breed)
+        },
+        onImageRequest = {
+//            viewModel::loadBreedImage
+        }
     )
     private var isSearchVisible = false
 
@@ -71,31 +81,28 @@ class BreedsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.layoutManager = StaggeredGridLayoutManager(
-            StaggeredGridLayoutManager.Adaptive.MIN_SIZE,
-            StaggeredGridLayoutManager.VERTICAL
-        )
+        binding.recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.recyclerView.adapter = adapter
+
+        viewModel.filteredBreeds.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+        }
+
+        viewModel.breedImages.observe(viewLifecycleOwner) { images ->
+            adapter.updateImages(images)
+        }
     }
 
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
+            viewModel.uiState.observe(viewLifecycleOwner) { state ->
                 binding.loadingView.isVisible = state is UiState.Loading
                 binding.recyclerView.isVisible = state is UiState.Success
                 binding.errorContainer.isVisible = state is UiState.Error
 
-                when (state) {
-                    is UiState.Success -> {
-                        adapter.submitList(state.data)
-                        buildAlphabetSidebar(state.data)
-                    }
-
-                    is UiState.Error -> {
-                        binding.errorText.text = state.error.toMessage(requireContext())
-                    }
-
-                    else -> Unit
+                if (state is UiState.Error) {
+                    binding.errorText.text = state.throwable.localizedMessage
                 }
             }
         }

@@ -67,6 +67,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.converter.gson)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.glide)
+    kapt(libs.glide.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

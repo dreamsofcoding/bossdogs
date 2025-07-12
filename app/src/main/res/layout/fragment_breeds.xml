@@ -8,10 +8,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/list_root"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Top app bar with Search/Close icon -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             style="@style/Widget.Material3.Toolbar"
@@ -24,10 +24,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Search field; hidden by default -->
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_input_layout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,7 +43,6 @@
                 android:imeOptions="actionDone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Content container -->
         <FrameLayout
             android:id="@+id/content_container"
             android:layout_width="0dp"
@@ -54,14 +52,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- 1) Loading indicator -->
             <ProgressBar
                 android:id="@+id/loading_view"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center" />
 
-            <!-- 2) Error screen -->
             <LinearLayout
                 android:id="@+id/error_container"
                 android:orientation="vertical"
@@ -75,18 +71,15 @@
                     android:id="@+id/error_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/error_generic"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:paddingBottom="16dp" />
 
                 <Button
                     android:id="@+id/retry_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/retry" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <!-- 3) RecyclerView for grid -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:visibility="gone"
@@ -96,7 +89,6 @@
                 android:paddingEnd="50dp"
                 android:clipToPadding="false" />
 
-            <!-- 4) Alphabet sidebar -->
             <LinearLayout
                 android:id="@+id/alphabet_sidebar"
                 android:orientation="vertical"
