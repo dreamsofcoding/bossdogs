@@ -16,6 +16,7 @@ import io.bossdogs.R
 import io.bossdogs.databinding.FragmentBreedsBinding
 import io.bossdogs.model.DogBreed
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BreedsFragment : Fragment() {
@@ -28,8 +29,8 @@ class BreedsFragment : Fragment() {
         onClick = { breed ->
 //            viewModel.onBreedClick(breed)
         },
-        onImageRequest = {
-//            viewModel::loadBreedImage
+        onImageRequest = { breed ->
+            viewModel.loadBreedImage(breed)
         }
     )
     private var isSearchVisible = false
@@ -45,6 +46,7 @@ class BreedsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.d("💡 BreedsFragment onViewCreated")
         setupToolbar()
         setupRecyclerView()
         observeUiState()
@@ -81,31 +83,45 @@ class BreedsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.recyclerView.layoutManager =
-            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        binding.recyclerView.adapter = adapter
-
         viewModel.filteredBreeds.observe(viewLifecycleOwner) { list ->
+            Timber.d("💡 filteredBreeds size = ${list.size}")
             adapter.submitList(list)
         }
 
         viewModel.breedImages.observe(viewLifecycleOwner) { images ->
             adapter.updateImages(images)
         }
+
+        binding.recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.recyclerView.adapter = adapter
     }
 
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.observe(viewLifecycleOwner) { state ->
+                Timber.d("💡 uiState = $state")
                 binding.loadingView.isVisible = state is UiState.Loading
-                binding.recyclerView.isVisible = state is UiState.Success
                 binding.errorContainer.isVisible = state is UiState.Error
+
+                when (state) {
+                    is UiState.Success -> {
+                        adapter.submitList(state.data)
+                        binding.recyclerView.isVisible = true
+                    }
+
+                    else -> {
+                        binding.recyclerView.isVisible = false
+                    }
+                }
 
                 if (state is UiState.Error) {
                     binding.errorText.text = state.throwable.localizedMessage
                 }
             }
         }
+
+
     }
 
     private fun setupRetry() {

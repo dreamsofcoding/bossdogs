@@ -1,14 +1,19 @@
 package io.bossdogs.ui
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import io.bossdogs.R
 import io.bossdogs.databinding.ItemBreedBinding
 import io.bossdogs.model.DogBreed
+import timber.log.Timber
 
 class DogBreedsAdapter(
     private val onClick: (String) -> Unit,
@@ -55,10 +60,31 @@ class DogBreedsAdapter(
                     .load(imageUrl)
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_placeholder)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            Timber.e(e, "Glide failed for $imageUrl")
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<Drawable?>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return false
+                        }
+                    })
                     .into(binding.breedImage)
             } else {
-                onImageRequest(breed.name)
                 binding.breedImage.setImageResource(R.drawable.ic_placeholder)
+                onImageRequest(breed.name)
             }
 
             binding.executePendingBindings()
