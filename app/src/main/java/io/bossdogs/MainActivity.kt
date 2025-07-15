@@ -1,7 +1,6 @@
 package io.bossdogs
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.ui.SplashFragment
@@ -14,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         Timber.d("MainActivity created")
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction()

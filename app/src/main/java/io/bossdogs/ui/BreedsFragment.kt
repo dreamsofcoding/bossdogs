@@ -1,12 +1,16 @@
 package io.bossdogs.ui
 
+import android.content.res.Resources
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,45 +51,21 @@ class BreedsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("💡 BreedsFragment onViewCreated")
-        setupToolbar()
         setupRecyclerView()
         observeUiState()
         setupRetry()
-        setupSearchField()
     }
-
-    private fun setupToolbar() {
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_search) {
-                toggleSearch()
-                true
-            } else false
-        }
-    }
-
-    private fun toggleSearch() {
-        isSearchVisible = !isSearchVisible
-        if (!isSearchVisible) {
-            viewModel.updateSearchQuery("")
-            binding.searchField.text?.clear()
-        }
-        binding.searchInputLayout.isVisible = isSearchVisible
-        binding.toolbar.menu.findItem(R.id.action_search)
-            .setIcon(
-                if (isSearchVisible) R.drawable.ic_clear else R.drawable.ic_search
-            )
-    }
-
-    private fun setupSearchField() {
-        binding.searchField.addTextChangedListener { editable ->
-            viewModel.updateSearchQuery(editable.toString())
-        }
-    }
-
     private fun setupRecyclerView() {
         viewModel.filteredBreeds.observe(viewLifecycleOwner) { list ->
             Timber.d("💡 filteredBreeds size = ${list.size}")
             adapter.submitList(list)
+
+            val showSidebar = list.isNotEmpty() && viewModel.searchQuery.value.isNullOrBlank()
+            binding.alphabetSidebar.isVisible = showSidebar
+
+            if (showSidebar) {
+                buildAlphabetSidebar(list)
+            }
         }
 
         viewModel.breedImages.observe(viewLifecycleOwner) { images ->
@@ -120,33 +100,79 @@ class BreedsFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun setupRetry() {
         binding.retryButton.setOnClickListener { viewModel.retry() }
     }
 
+//    private fun buildAlphabetSidebar(breeds: List<DogBreed>) {
+//        val letters = breeds.map { it.displayName.first().uppercaseChar() }
+//        binding.alphabetSidebar.removeAllViews()
+//        letters.distinct().forEach { letter ->
+//            val tv = TextView(requireContext()).apply {
+//                text = letter.toString()
+//                setTextColor(
+//                    ContextCompat.getColor(requireContext(), R.color.black)
+//                )
+//                setPadding(4, 8, 4, 8)
+//                setOnClickListener {
+//                    adapter.getSectionPosition(letter)?.let { pos ->
+//                        binding.recyclerView.scrollToPosition(pos)
+//                    }
+//                }
+//            }
+//            binding.alphabetSidebar.addView(tv)
+//        }
+//    }
+
     private fun buildAlphabetSidebar(breeds: List<DogBreed>) {
-        val letters = breeds.map { it.displayName.first().uppercaseChar() }
-        binding.alphabetSidebar.removeAllViews()
+        val letters = breeds
+            .map { it.displayName.first().uppercaseChar() }
+            .distinct()
+            .sorted()                 // optional: ensure A→Z order
+
+        val sidebar = binding.alphabetSidebar
+        sidebar.removeAllViews()
+
+        // Tell the LinearLayout how many “weight units” it will distribute:
+        sidebar.weightSum = letters.size.toFloat()
+
         letters.forEach { letter ->
             val tv = TextView(requireContext()).apply {
                 text = letter.toString()
-                setPadding(4, 8, 4, 8)
+                textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                gravity = Gravity.CENTER
+
+                // Give each child a height of 0 and weight=1 so they evenly fill the sidebar
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    0,
+                    1f
+                ).apply {
+                    // optional horizontal margin
+                    leftMargin = 4.dpToPx()
+                    rightMargin = 4.dpToPx()
+                }
+
                 setOnClickListener {
                     adapter.getSectionPosition(letter)?.let { pos ->
                         binding.recyclerView.scrollToPosition(pos)
                     }
                 }
             }
-            binding.alphabetSidebar.addView(tv)
+            sidebar.addView(tv)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
+fun Int.dpToPx(): Int =
+    (this * Resources.getSystem().displayMetrics.density).toInt()

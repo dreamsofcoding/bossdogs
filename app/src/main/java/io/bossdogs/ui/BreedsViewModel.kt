@@ -72,8 +72,15 @@ class BreedsViewModel @Inject constructor(
 
     fun retry() = loadBreeds()
 
+
+    private val loadingBreeds = mutableSetOf<String>()
+
     fun loadBreedImage(breedName: String) {
-        if (_breedImages.value?.containsKey(breedName) == true) return
+        if (_breedImages.value!!.containsKey(breedName) ||
+            loadingBreeds.contains(breedName)
+        ) return
+
+        loadingBreeds += breedName
 
         viewModelScope.launch {
             Timber.d("Loading image for breed: $breedName")
