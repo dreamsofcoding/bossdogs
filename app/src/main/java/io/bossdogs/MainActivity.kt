@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, SplashFragment(), "SPLASH")
+            .replace(R.id.fragment_container, SplashFragment(), SPLASH)
             .commit()
     }
 
@@ -25,4 +25,10 @@ class MainActivity : AppCompatActivity() {
         Timber.d("MainActivity destroyed")
     }
 
+    companion object {
+        val SPLASH = "splash"
+        val LIST = "list"
+        val IMAGES = "images"
+        val BREED = "breed"
+    }
 }

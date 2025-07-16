@@ -1,7 +1,6 @@
 package io.bossdogs.ui
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,9 +20,7 @@ class BreedsViewModel @Inject constructor(
     val uiState: LiveData<UiState<List<DogBreed>>> = _uiState
 
     private val _allBreeds = MutableLiveData<List<DogBreed>>(emptyList())
-    private val _searchQuery = MutableLiveData("")
-    val searchQuery: LiveData<String> = _searchQuery
-
+    val allBreeds: LiveData<List<DogBreed>> = _allBreeds
     private val _breedImages = MutableLiveData<Map<String, String>>(emptyMap())
     val breedImages: LiveData<Map<String, String>> = _breedImages
 
@@ -31,29 +28,21 @@ class BreedsViewModel @Inject constructor(
         loadBreeds()
     }
 
-    fun updateSearchQuery(q: String) {
-        _searchQuery.value = q
-    }
-
-    val filteredBreeds: LiveData<List<DogBreed>> = MediatorLiveData<List<DogBreed>>().apply {
-        var currentList = emptyList<DogBreed>()
-        fun doFilter(list: List<DogBreed>, query: String) = if (query.isBlank()) {
-            list
-        } else {
-            list.filter { b ->
-                b.displayName.contains(query, true) ||
-                        b.subBreeds.any { it.contains(query, true) }
-            }
-        }
-
-        addSource(_allBreeds) { list ->
-            currentList = list
-            value = doFilter(list, _searchQuery.value.orEmpty())
-        }
-        addSource(_searchQuery) { q ->
-            value = doFilter(currentList, q)
-        }
-    }
+//    val filteredBreeds: LiveData<List<DogBreed>> = MediatorLiveData<List<DogBreed>>().apply {
+//        var currentList = emptyList<DogBreed>()
+//        fun doFilter(list: List<DogBreed>, query: String) = if (query.isBlank()) {
+//            list
+//        } else {
+//            list.filter { b ->
+//                b.displayName.contains(query, true) ||
+//                        b.subBreeds.any { it.contains(query, true) }
+//            }
+//        }
+//
+//        addSource(_allBreeds) { list ->
+//            currentList = list
+//        }
+//    }
 
     fun loadBreeds() {
         _uiState.value = UiState.Loading

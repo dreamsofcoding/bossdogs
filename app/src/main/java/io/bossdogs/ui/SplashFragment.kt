@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
+import io.bossdogs.MainActivity.Companion.LIST
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentSplashBinding
 
@@ -44,7 +45,7 @@ class SplashFragment : Fragment() {
                 .replace(
                     R.id.fragment_container,
                     BreedsFragment(),
-                    "BREEDS"
+                    LIST
                 )
                 .commit()
         }, SPLASH_DELAY_MS)

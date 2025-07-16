@@ -10,12 +10,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import io.bossdogs.MainActivity.Companion.BREED
+import io.bossdogs.MainActivity.Companion.IMAGES
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentBreedsBinding
 import io.bossdogs.model.DogBreed
@@ -31,13 +34,12 @@ class BreedsFragment : Fragment() {
     private val viewModel: BreedsViewModel by viewModels()
     private val adapter = DogBreedsAdapter(
         onClick = { breed ->
-//            viewModel.onBreedClick(breed)
+            openImages(breed)
         },
         onImageRequest = { breed ->
             viewModel.loadBreedImage(breed)
         }
     )
-    private var isSearchVisible = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,14 +58,11 @@ class BreedsFragment : Fragment() {
         setupRetry()
     }
     private fun setupRecyclerView() {
-        viewModel.filteredBreeds.observe(viewLifecycleOwner) { list ->
+        viewModel.allBreeds.observe(viewLifecycleOwner) { list ->
             Timber.d("💡 filteredBreeds size = ${list.size}")
             adapter.submitList(list)
-
-            val showSidebar = list.isNotEmpty() && viewModel.searchQuery.value.isNullOrBlank()
-            binding.alphabetSidebar.isVisible = showSidebar
-
-            if (showSidebar) {
+            if (list.isNotEmpty()) {
+                binding.alphabetSidebar.isVisible
                 buildAlphabetSidebar(list)
             }
         }
@@ -105,37 +104,14 @@ class BreedsFragment : Fragment() {
     private fun setupRetry() {
         binding.retryButton.setOnClickListener { viewModel.retry() }
     }
-
-//    private fun buildAlphabetSidebar(breeds: List<DogBreed>) {
-//        val letters = breeds.map { it.displayName.first().uppercaseChar() }
-//        binding.alphabetSidebar.removeAllViews()
-//        letters.distinct().forEach { letter ->
-//            val tv = TextView(requireContext()).apply {
-//                text = letter.toString()
-//                setTextColor(
-//                    ContextCompat.getColor(requireContext(), R.color.black)
-//                )
-//                setPadding(4, 8, 4, 8)
-//                setOnClickListener {
-//                    adapter.getSectionPosition(letter)?.let { pos ->
-//                        binding.recyclerView.scrollToPosition(pos)
-//                    }
-//                }
-//            }
-//            binding.alphabetSidebar.addView(tv)
-//        }
-//    }
-
     private fun buildAlphabetSidebar(breeds: List<DogBreed>) {
         val letters = breeds
             .map { it.displayName.first().uppercaseChar() }
             .distinct()
-            .sorted()                 // optional: ensure A→Z order
+            .sorted()
 
         val sidebar = binding.alphabetSidebar
         sidebar.removeAllViews()
-
-        // Tell the LinearLayout how many “weight units” it will distribute:
         sidebar.weightSum = letters.size.toFloat()
 
         letters.forEach { letter ->
@@ -146,13 +122,11 @@ class BreedsFragment : Fragment() {
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 gravity = Gravity.CENTER
 
-                // Give each child a height of 0 and weight=1 so they evenly fill the sidebar
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     0,
                     1f
                 ).apply {
-                    // optional horizontal margin
                     leftMargin = 4.dpToPx()
                     rightMargin = 4.dpToPx()
                 }
@@ -171,6 +145,16 @@ class BreedsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun openImages(breedName: String) {
+        val imagesFragment = ImagesFragment()
+        imagesFragment.arguments = bundleOf(
+            BREED to breedName.lowercase()
+        )
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.add(R.id.fragment_container, imagesFragment, IMAGES)
+            ?.addToBackStack(IMAGES)?.commit()
     }
 }
 
