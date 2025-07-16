@@ -62,6 +62,7 @@ class BreedsFragment : Fragment() {
 
     private fun setupToolbar() {
         (activity as AppCompatActivity).supportActionBar?.apply {
+            show()
             title = getString(R.string.app_name)
             setDisplayHomeAsUpEnabled(false)
         }

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.MainActivity.Companion.LIST
@@ -34,6 +35,13 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         commenceSplashAnimation()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            hide()
+        }
     }
 
     private fun commenceSplashAnimation() {

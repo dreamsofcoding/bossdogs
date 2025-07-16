@@ -92,6 +92,7 @@ class ImagesFragment : Fragment() {
 
     private fun setupToolbar(breedName: String) {
         (activity as AppCompatActivity).supportActionBar?.apply {
+            show()
             title = breedName.replaceFirstChar { it.uppercase() }
             setDisplayHomeAsUpEnabled(true)
         }
