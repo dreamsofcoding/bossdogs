@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.MainActivity.Companion.BREED
 import io.bossdogs.R
@@ -38,6 +40,8 @@ class ImagesFragment : Fragment() {
 
         val breedName = requireArguments().getString(BREED)!!
         viewModel.loadImages(breedName)
+
+        setupToolbar(breedName)
 
         adapter = ImagesAdapter { image ->
             viewModel.selectHero(image)
@@ -84,6 +88,19 @@ class ImagesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupToolbar(breedName: String) {
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            title = breedName.replaceFirstChar { it.uppercase() }
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+        (activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.toolbar)
+            .setNavigationOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
+
     }
 
     override fun onDestroyView() {

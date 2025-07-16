@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -53,16 +54,25 @@ class BreedsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("💡 BreedsFragment onViewCreated")
+        setupToolbar()
         setupRecyclerView()
         observeUiState()
         setupRetry()
     }
+
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            title = getString(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+        }
+    }
+
     private fun setupRecyclerView() {
         viewModel.allBreeds.observe(viewLifecycleOwner) { list ->
             Timber.d("💡 filteredBreeds size = ${list.size}")
             adapter.submitList(list)
             if (list.isNotEmpty()) {
-                binding.alphabetSidebar.isVisible
+                binding.alphabetSidebar.isVisible = true
                 buildAlphabetSidebar(list)
             }
         }

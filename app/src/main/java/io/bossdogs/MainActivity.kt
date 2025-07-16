@@ -15,10 +15,18 @@ class MainActivity : AppCompatActivity() {
         Timber.d("MainActivity created")
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(findViewById(R.id.toolbar))
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, SplashFragment(), SPLASH)
             .commit()
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

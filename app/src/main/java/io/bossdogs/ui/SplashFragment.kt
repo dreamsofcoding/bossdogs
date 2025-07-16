@@ -33,7 +33,14 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.splashContainer.alpha = 0f
+        commenceSplashAnimation()
+    }
+
+    private fun commenceSplashAnimation() {
+        binding.splashContainer.apply {
+            alpha = 0f
+        }
+
         binding.splashContainer.animate()
             .alpha(1f)
             .setDuration(500)
@@ -41,14 +48,18 @@ class SplashFragment : Fragment() {
             .start()
 
         Handler(Looper.getMainLooper()).postDelayed({
-            parentFragmentManager.beginTransaction()
-                .replace(
-                    R.id.fragment_container,
-                    BreedsFragment(),
-                    LIST
-                )
-                .commit()
+            navigateToListScreen()
         }, SPLASH_DELAY_MS)
+    }
+
+    private fun navigateToListScreen() {
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                BreedsFragment(),
+                LIST
+            )
+            .commit()
     }
 
     override fun onDestroyView() {
