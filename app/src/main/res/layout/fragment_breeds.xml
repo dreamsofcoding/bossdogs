@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="io.bossdogs.ui.BreedsViewModel" />
     </data>
 
     <FrameLayout
         android:id="@+id/content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/backgroundColor">
 
         <ProgressBar
             android:id="@+id/loading_view"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.uiState.isLoading ? View.VISIBLE : View.GONE}" />
 
         <LinearLayout
             android:id="@+id/error_container"
@@ -24,13 +31,14 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="24dp"
-            android:visibility="gone">
+            android:visibility="@{viewModel.uiState.errorMsg != null ? View.VISIBLE : View.GONE}">
 
             <TextView
                 android:id="@+id/error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
+                android:text="@{viewModel.uiState.errorMsg}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
             <Button
@@ -46,7 +54,9 @@
             android:clipToPadding="false"
             android:paddingStart="8dp"
             android:paddingEnd="50dp"
-            android:visibility="gone" />
+            android:visibility="@{viewModel.uiState.data != null ? View.VISIBLE : View.GONE}"
+            app:breedsList="@{viewModel.uiState.data}"
+            app:breedImages="@{viewModel.breedImages}" />
 
         <LinearLayout
             android:id="@+id/alphabet_sidebar"
@@ -54,6 +64,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end|center_vertical"
             android:orientation="vertical"
-            android:padding="8dp" />
+            android:padding="16dp"
+            app:lettersList="@{viewModel.allBreeds}" />
     </FrameLayout>
 </layout>

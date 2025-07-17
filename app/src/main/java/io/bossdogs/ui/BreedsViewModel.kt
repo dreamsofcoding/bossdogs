@@ -16,7 +16,7 @@ import javax.inject.Inject
 class BreedsViewModel @Inject constructor(
     private val repository: DogRepository
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<UiState<List<DogBreed>>>(UiState.Loading)
+    private val _uiState = MutableLiveData<UiState<List<DogBreed>>>(UiState.loading())
     val uiState: LiveData<UiState<List<DogBreed>>> = _uiState
 
     private val _allBreeds = MutableLiveData<List<DogBreed>>(emptyList())
@@ -24,43 +24,28 @@ class BreedsViewModel @Inject constructor(
     private val _breedImages = MutableLiveData<Map<String, String>>(emptyMap())
     val breedImages: LiveData<Map<String, String>> = _breedImages
 
+
     init {
         loadBreeds()
     }
 
-//    val filteredBreeds: LiveData<List<DogBreed>> = MediatorLiveData<List<DogBreed>>().apply {
-//        var currentList = emptyList<DogBreed>()
-//        fun doFilter(list: List<DogBreed>, query: String) = if (query.isBlank()) {
-//            list
-//        } else {
-//            list.filter { b ->
-//                b.displayName.contains(query, true) ||
-//                        b.subBreeds.any { it.contains(query, true) }
-//            }
-//        }
-//
-//        addSource(_allBreeds) { list ->
-//            currentList = list
-//        }
-//    }
-
     fun loadBreeds() {
-        _uiState.value = UiState.Loading
+        _uiState.value = UiState.loading()
         viewModelScope.launch {
             when (val result = repository.getBreeds()) {
                 is ApiResult.Success -> {
                     _allBreeds.value = result.data
-                    _uiState.value = UiState.Success(result.data)
+                    _uiState.value = UiState.success(result.data)
                 }
+
                 is ApiResult.Error -> {
-                    _uiState.value = UiState.Error(result.exception)
+                    _uiState.value = UiState.error(result.exception.message ?: "Unknown error")
                 }
             }
         }
     }
 
     fun retry() = loadBreeds()
-
 
     private val loadingBreeds = mutableSetOf<String>()
 
@@ -89,10 +74,4 @@ class BreedsViewModel @Inject constructor(
             }
         }
     }
-}
-
-sealed class UiState<out T> {
-    object Loading : UiState<Nothing>()
-    data class Success<T>(val data: T) : UiState<T>()
-    data class Error(val throwable: Throwable) : UiState<Nothing>()
 }
