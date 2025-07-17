@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
+import io.bossdogs.MainActivity
 import io.bossdogs.MainActivity.Companion.BREED
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentImagesBinding
@@ -42,7 +43,7 @@ class ImagesFragment : Fragment() {
         val breedName = requireArguments().getString(BREED)!!
         viewModel.loadImages(breedName)
 
-        setupToolbar(breedName)
+        setupToolbar()
 
         setupAdapter()
     }
@@ -56,15 +57,9 @@ class ImagesFragment : Fragment() {
         binding.imagesRecyclerview.adapter = adapter
     }
 
-    private fun setupToolbar(breedName: String) {
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            show()
-            title = breedName.replaceFirstChar { it.uppercase() }
-            setDisplayHomeAsUpEnabled(true)
-        }
-
+    private fun setupToolbar() {
+        (activity as MainActivity).setImagesToolbar(this)
         setupToolbarBackNav()
-
     }
 
     private fun setupToolbarBackNav() {

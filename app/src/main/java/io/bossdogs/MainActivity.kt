@@ -3,6 +3,8 @@ package io.bossdogs
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import io.bossdogs.ui.BreedsFragment
+import io.bossdogs.ui.ImagesFragment
 import io.bossdogs.ui.SplashFragment
 import timber.log.Timber
 
@@ -17,9 +19,45 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        setToolbarListener()
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, SplashFragment(), SPLASH)
             .commit()
+    }
+
+    private fun setToolbarListener() {
+        supportFragmentManager.addOnBackStackChangedListener {
+            val frag = supportFragmentManager
+                .findFragmentById(R.id.fragment_container)
+            when (frag) {
+                is BreedsFragment -> {
+                    setBreedsToolbar()
+                }
+
+                is ImagesFragment -> {
+                    setImagesToolbar(frag)
+                }
+            }
+        }
+
+    }
+
+    fun setBreedsToolbar() {
+        supportActionBar?.apply {
+            show()
+            title = getString(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+        }
+    }
+
+    fun setImagesToolbar(frag: ImagesFragment) {
+        val breed = frag.requireArguments().getString(BREED)!!
+        supportActionBar?.apply {
+            show()
+            title = breed.replaceFirstChar { it.uppercase() }
+            setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

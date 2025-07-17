@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import io.bossdogs.MainActivity
 import io.bossdogs.MainActivity.Companion.BREED
 import io.bossdogs.MainActivity.Companion.IMAGES
 import io.bossdogs.R
@@ -56,11 +56,7 @@ class BreedsFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            show()
-            title = getString(R.string.app_name)
-            setDisplayHomeAsUpEnabled(false)
-        }
+        (activity as MainActivity).setBreedsToolbar()
     }
 
     private fun setupRecyclerView() {

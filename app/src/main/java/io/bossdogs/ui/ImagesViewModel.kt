@@ -51,16 +51,6 @@ class ImagesViewModel @Inject constructor(
         }
     }
 
-    fun refreshImages() {
-        _uiState.value = UiState.loading()
-        Timber.d("Refreshing images for breed: ${_breedDisplayName.value}")
-        if (allImages.isNotEmpty()) {
-            _uiState.value = UiState.success(getRandomImages())
-        } else {
-            _breedDisplayName.value?.let { loadImages(it) }
-        }
-    }
-
     private fun getRandomImages(): List<DogImage> {
         return if (allImages.size <= 10) {
             allImages
