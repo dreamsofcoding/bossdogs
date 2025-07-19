@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.image
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +14,7 @@ import io.bossdogs.MainActivity.Companion.BREED
 import io.bossdogs.MainActivity.Companion.IMAGES
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentBreedsBinding
+import io.bossdogs.ui.image.ImagesFragment
 import timber.log.Timber
 
 @AndroidEntryPoint

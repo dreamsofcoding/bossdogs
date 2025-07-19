@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.bossdogs.databinding.ItemBreedBinding
 import io.bossdogs.model.DogBreed
+import io.bossdogs.ui.DiffCallback
 
 class BreedsAdapter(
     private val onClick: (String) -> Unit,

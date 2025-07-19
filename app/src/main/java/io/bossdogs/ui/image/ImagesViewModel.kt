@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.image
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bossdogs.DogRepository
 import io.bossdogs.model.ApiResult
 import io.bossdogs.model.DogImage
+import io.bossdogs.ui.UiState
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class ImagesViewModel @Inject constructor(
     private val repository: DogRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<UiState<List<DogImage>>>(UiState.loading())
+    private val _uiState = MutableLiveData<UiState<List<DogImage>>>(UiState.Companion.loading())
     val uiState: LiveData<UiState<List<DogImage>>> = _uiState
 
     private val _breedDisplayName = MutableLiveData("")
@@ -32,14 +33,14 @@ class ImagesViewModel @Inject constructor(
         _breedDisplayName.value = breedName.replaceFirstChar { it.uppercase() }
         Timber.d("Loading images for breed: $breedName")
         viewModelScope.launch {
-            _uiState.value = UiState.loading()
+            _uiState.value = UiState.Companion.loading()
 
             when (val result = repository.getBreedImages(breedName)) {
                 is ApiResult.Success -> {
                     allImages = result.data
                     selectHero(result.data.random())
                     Timber.d("Successfully loaded ${result.data.size} images for breed: $breedName")
-                    _uiState.value = UiState.success(getRandomImages())
+                    _uiState.value = UiState.Companion.success(getRandomImages())
                 }
 
                 is ApiResult.Error -> {

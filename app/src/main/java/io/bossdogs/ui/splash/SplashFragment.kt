@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.splash
 
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.MainActivity.Companion.LIST
 import io.bossdogs.R
 import io.bossdogs.databinding.FragmentSplashBinding
+import io.bossdogs.ui.list.BreedsFragment
 
 
 private const val SPLASH_DELAY_MS = 3000L

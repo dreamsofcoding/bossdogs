@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.bossdogs.DogRepository
 import io.bossdogs.model.ApiResult
 import io.bossdogs.model.DogBreed
+import io.bossdogs.ui.UiState
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class BreedsViewModel @Inject constructor(
     private val repository: DogRepository
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<UiState<List<DogBreed>>>(UiState.loading())
+    private val _uiState = MutableLiveData<UiState<List<DogBreed>>>(UiState.Companion.loading())
     val uiState: LiveData<UiState<List<DogBreed>>> = _uiState
 
     private val _allBreeds = MutableLiveData<List<DogBreed>>(emptyList())
@@ -30,16 +31,17 @@ class BreedsViewModel @Inject constructor(
     }
 
     fun loadBreeds() {
-        _uiState.value = UiState.loading()
+        _uiState.value = UiState.Companion.loading()
         viewModelScope.launch {
             when (val result = repository.getBreeds()) {
                 is ApiResult.Success -> {
                     _allBreeds.value = result.data
-                    _uiState.value = UiState.success(result.data)
+                    _uiState.value = UiState.Companion.success(result.data)
                 }
 
                 is ApiResult.Error -> {
-                    _uiState.value = UiState.error(result.exception.message ?: "Unknown error")
+                    _uiState.value =
+                        UiState.Companion.error(result.exception.message ?: "Unknown error")
                 }
             }
         }

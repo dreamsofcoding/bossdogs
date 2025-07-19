@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
-import io.bossdogs.ui.BreedsFragment
-import io.bossdogs.ui.ImagesFragment
-import io.bossdogs.ui.SplashFragment
+import io.bossdogs.ui.image.ImagesFragment
+import io.bossdogs.ui.list.BreedsFragment
+import io.bossdogs.ui.splash.SplashFragment
 import timber.log.Timber
 
 @AndroidEntryPoint

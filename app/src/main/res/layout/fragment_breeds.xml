@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="io.bossdogs.ui.BreedsViewModel" />
+            type="io.bossdogs.ui.list.BreedsViewModel" />
     </data>
 
     <FrameLayout

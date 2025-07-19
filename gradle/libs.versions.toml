@@ -5,19 +5,25 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
+lifecycleRuntimeKtx = "2.9.2"
 retrofit = "3.0.0"
 serialization = "1.9.0"
 lottieVersion = "6.6.7"
 roomRuntime = "2.7.2"
 timberVersion = "5.0.1"
-hilt = "2.56.2"
+hilt = "2.57"
 mockk = "1.14.4"
 coreTesting = "2.2.0"
 material = "1.12.0"
 converter-gson = "3.0.0"
 fragment = "1.8.8"
-glide = "4.15.1"
+glide = "4.16.0"
+androidTestCore = "1.6.1"
+androidTestCoreKtx = "1.6.1"
+androidTestRules = "1.6.1"
+androidTestRunner = "1.6.2"
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +47,13 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidTestCore" }
+androidx-test-core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "androidTestCoreKtx" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidTestRules" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidTestRunner" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="io.bossdogs.ui.ImagesViewModel" />
+            type="io.bossdogs.ui.image.ImagesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

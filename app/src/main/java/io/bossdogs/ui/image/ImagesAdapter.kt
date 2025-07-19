@@ -1,4 +1,4 @@
-package io.bossdogs.ui
+package io.bossdogs.ui.image
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.bossdogs.databinding.ItemImageBinding
 import io.bossdogs.model.DogImage
+import io.bossdogs.ui.DiffCallback
 
 class ImagesAdapter(
     private val onClick: (DogImage) -> Unit
