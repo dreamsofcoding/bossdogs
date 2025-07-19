@@ -2,6 +2,8 @@ package io.bossdogs
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.bossdogs.ui.BreedsFragment
 import io.bossdogs.ui.ImagesFragment
@@ -58,6 +60,9 @@ class MainActivity : AppCompatActivity() {
             title = breed.replaceFirstChar { it.uppercase() }
             setDisplayHomeAsUpEnabled(true)
         }
+        findViewById<MaterialToolbar>(R.id.toolbar)
+            .navigationIcon
+            ?.setTint(ContextCompat.getColor(this, R.color.white))
     }
 
     override fun onSupportNavigateUp(): Boolean {
